@@ -5,6 +5,7 @@ const MyDetails = ({ input }) => {
   const [meteo, setMeteo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [meteo5, setMeteo5] = useState([]);
 
   useEffect(() => {
     getWeather(input);
@@ -19,22 +20,40 @@ const MyDetails = ({ input }) => {
       IT&units=metric&appid=b10c5672490cca23ef56c58204432a64`
     )
       .then((res) => {
-        if (!res.ok) {
+        if (res.ok) {
+          return res.json();
+        } else {
           throw new Error(`Server error: ${res.status}`);
         }
-        return res.json();
       })
       .then((arrayMeteo) => {
         console.log(arrayMeteo);
         setMeteo(arrayMeteo);
         setError(null);
+        setLoading(false);
+        const lat = arrayMeteo.coord.lat;
+        const lon = arrayMeteo.coord.lon;
+        console.log(lat, lon);
+        fetch(
+          `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=b10c5672490cca23ef56c58204432a64`
+        )
+          .then((res) => {
+            if (res.ok) {
+              return res.json();
+            } else {
+              throw new Error();
+            }
+          })
+          .then((arrayFiveDays) => {
+            setMeteo5(arrayFiveDays);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log("ERRORE", err);
         setError(err);
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
 
@@ -50,7 +69,6 @@ const MyDetails = ({ input }) => {
     return (
       <Container className="text-center mt-5">
         <h1>Errore nel recupero del meteo</h1>
-        <p>{error.message}</p>
       </Container>
     );
   }
@@ -67,35 +85,55 @@ const MyDetails = ({ input }) => {
     <Container>
       <Row>
         <Col className="text-center mt-5">
-          <h1>PREVISIONI METEO {meteo.name.toUpperCase()}</h1>
-          <Table striped bordered hover>
+          <h1>
+            PREVISIONI METEO{" "}
+            <span className=" fw-bolder ">{meteo.name.toUpperCase()}</span>
+          </h1>
+          <Table bordered hover className=" border-info my-5 ">
             <thead>
               <tr>
                 <th>TEMPERATURA</th>
                 <th>METEO</th>
-                <th>VENTI</th>
+                <th>VENTO</th>
                 <th>UMIDITA'</th>
                 <th>PERCEPITA</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>{meteo.main?.temp != null ? `${meteo.main.temp}°` : ""}</td>
-                <td>{meteo.weather?.[0]?.description || ""}</td>
-                <td>
-                  {meteo.wind?.speed != null ? `${meteo.wind.speed} km/h` : ""}
-                </td>
-                <td>
-                  {meteo.main?.humidity != null
-                    ? `${meteo.main.humidity}%`
-                    : ""}
-                </td>
-                <td>
-                  {meteo.main?.feels_like != null
-                    ? `${meteo.main.feels_like}°`
-                    : ""}
-                </td>
+                <td>{meteo.main.temp}</td>
+                <td>{meteo.weather[0].description || ""}</td>
+                <td>{meteo.wind.speed} km/h</td>
+                <td>{meteo.main.humidity}%</td>
+                <td>{meteo.main.feels_like}°`</td>
               </tr>
+            </tbody>
+          </Table>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <h1>PROSSIMI 5 GIORNI</h1>
+          <Table bordered hover className=" border-info my-5 ">
+            <thead>
+              <tr>
+                <th>TEMPERATURA</th>
+                <th>METEO</th>
+                <th>VENTO</th>
+                <th>UMIDITA'</th>
+                <th>PERCEPITA</th>
+              </tr>
+            </thead>
+            <tbody>
+              {meteo5.list?.map((giorno) => (
+                <tr key={giorno.dt}>
+                  <td>{giorno.main.temp}°</td>
+                  <td>{giorno.weather[0].description}</td>
+                  <td>{giorno.wind.speed} km/h</td>
+                  <td>{giorno.main.humidity}%</td>
+                  <td>{giorno.main.feels_like}°</td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         </Col>

@@ -47,6 +47,18 @@ const MyHomePage = ({ input, setInput }) => {
           </Col>
         </Row>
       </Container>
+      <Container className="text-center mb-5">
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed/dI4h-PUJM5g?si=lBTGKDQfQoSbNTmt"
+          title="YouTube video player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+        ></iframe>
+      </Container>
     </>
   );
 };

@@ -5,6 +5,7 @@ import { useState } from "react";
 import MyDetails from "./components/MyDetails";
 import MyHomePage from "./components/MyHomePage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import MyFooter from "./components/MyFooter";
 
 function App() {
   const [input, setInput] = useState("");
@@ -20,6 +21,7 @@ function App() {
             element={<MyHomePage input={input} setInput={setInput} />}
           />
         </Routes>
+        <MyFooter />
       </BrowserRouter>
     </>
   );
