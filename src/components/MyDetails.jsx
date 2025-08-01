@@ -112,7 +112,7 @@ const MyDetails = ({ input }) => {
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col className="text-center">
           <h1>PROSSIMI 5 GIORNI</h1>
           <Table bordered hover className=" border-info my-5 ">
             <thead>
@@ -125,15 +125,20 @@ const MyDetails = ({ input }) => {
               </tr>
             </thead>
             <tbody>
-              {meteo5.list?.map((giorno) => (
-                <tr key={giorno.dt}>
-                  <td>{giorno.main.temp}°</td>
-                  <td>{giorno.weather[0].description}</td>
-                  <td>{giorno.wind.speed} km/h</td>
-                  <td>{giorno.main.humidity}%</td>
-                  <td>{giorno.main.feels_like}°</td>
-                </tr>
-              ))}
+              {meteo5.list
+                ?.filter((inutile, indice) => indice % 8 === 0)
+                .map((giorno) => {
+                  console.log(giorno);
+                  return (
+                    <tr key={giorno.dt}>
+                      <td>{giorno.main.temp}°</td>
+                      <td>{giorno.weather[0].description}</td>
+                      <td>{giorno.wind.speed} km/h</td>
+                      <td>{giorno.main.humidity}%</td>
+                      <td>{giorno.main.feels_like}°</td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </Table>
         </Col>
