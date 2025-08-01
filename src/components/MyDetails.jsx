@@ -9,21 +9,27 @@ const MyDetails = ({ input }) => {
 
   useEffect(() => {
     getWeather(input);
+    {
+      /* avvio la funzione che fa la fetch con un use effect collegato allo stato passato come props input in app che prende il valore dell'input di ricerca*/
+    }
   }, [input]);
 
   const getWeather = (inputCitta) => {
     console.log(inputCitta);
     setLoading(true);
     const citta = inputCitta;
+    {
+      /*faccio la fetch per recuperare i dati metereologici di adesso */
+    }
     fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${citta},
+      `https://api.openweathermap.org/data/2.5/weather?q=${citta},  
       IT&units=metric&appid=b10c5672490cca23ef56c58204432a64`
     )
       .then((res) => {
         if (res.ok) {
           return res.json();
         } else {
-          throw new Error(`Server error: ${res.status}`);
+          throw new Error();
         }
       })
       .then((arrayMeteo) => {
@@ -34,6 +40,10 @@ const MyDetails = ({ input }) => {
         const lat = arrayMeteo.coord.lat;
         const lon = arrayMeteo.coord.lon;
         console.log(lat, lon);
+        {
+          /*faccio una fetch nel then della prima fetch cosi posso recuperare i dati relativi alla longitudine e latitudine e li salvo in 2 costanti che poi andrò
+          ad inserire nella seconda fecth per recuperare i dati delle previsioni dei prossimi 5 giorni */
+        }
         fetch(
           `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=b10c5672490cca23ef56c58204432a64`
         )
@@ -45,7 +55,7 @@ const MyDetails = ({ input }) => {
             }
           })
           .then((arrayFiveDays) => {
-            setMeteo5(arrayFiveDays);
+            setMeteo5(arrayFiveDays); //setto lo stato con l'array ricevuto dalla seconda fetch
           })
           .catch((err) => {
             console.log(err);
@@ -56,7 +66,7 @@ const MyDetails = ({ input }) => {
         setError(err);
       });
   };
-
+  // metto messaggidi errore e di caricamento
   if (loading) {
     return (
       <Container className="text-center mt-5">
@@ -101,6 +111,8 @@ const MyDetails = ({ input }) => {
             </thead>
             <tbody>
               <tr>
+                {" "}
+                {/*inserisco i dati della prima fetch */}
                 <td>{meteo.main.temp}</td>
                 <td>{meteo.weather[0].description || ""}</td>
                 <td>{meteo.wind.speed} km/h</td>
@@ -125,6 +137,7 @@ const MyDetails = ({ input }) => {
               </tr>
             </thead>
             <tbody>
+              {/* filtro i dati della seconda fecth con operatore modulo se l'indice diviso 8 da resto uguale a 0  */}
               {meteo5.list
                 ?.filter((inutile, indice) => indice % 8 === 0)
                 .map((giorno) => {

@@ -10,12 +10,16 @@ function MyNavbar() {
     <Navbar expand="lg" className=" bg-info-subtle sticky-top">
       <Container>
         <Link className="navbar-brand fw-bold" href="#home" to="/">
+          {" "}
+          {/* Ho cambiato i navlink con Link per poter tornare alla homepage al click */}
           EPIC METEO
         </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Link className="nav-link" href="#home" to="/">
+              {" "}
+              {/* Ho cambiato i navlink con Link per poter tornare alla homepage al click */}
               Home
             </Link>
             <Nav.Link href="#link">Allerte Maltempo</Nav.Link>
